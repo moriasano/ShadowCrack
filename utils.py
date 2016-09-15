@@ -1,5 +1,13 @@
-""" Code for the user interface """
+""" Varies utility functions """
 import os
+
+hash_algs = {
+    "0": "DES",
+    "1": "MD5",
+    "2a": "Blowfish",
+    "5": "SHA256",
+    "6": "SHA512"
+}
 
 
 def welcome():
@@ -27,6 +35,3 @@ def get_sc_params():
 
     user_name = input("Who's password are we cracking? Enter the username:")
     return file_path, user_name
-
-
-

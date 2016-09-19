@@ -1,13 +1,15 @@
 """ Varies utility functions """
 import os
+from hashlib import (md5, sha256, sha512)
 
-hash_algs = {
-    "0": "DES",
-    "1": "MD5",
-    "2a": "Blowfish",
-    "5": "SHA256",
-    "6": "SHA512"
+HASH_ALGS = {
+    "0": ("DES", None),
+    "1": ("MD5", md5),
+    "2a": ("Blowfish", None),
+    "5": ("SHA256", sha256),
+    "6": ("SHA512", sha512)
 }
+PASSWORDS = ""
 
 
 def welcome():

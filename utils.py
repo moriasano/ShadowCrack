@@ -2,6 +2,7 @@
 import os
 from hashlib import (md5, sha256, sha512)
 
+PASSWORDS = "phpbb.txt"
 HASH_ALGS = {
     "0": ("DES", None),
     "1": ("MD5", md5),
@@ -9,7 +10,6 @@ HASH_ALGS = {
     "5": ("SHA256", sha256),
     "6": ("SHA512", sha512)
 }
-PASSWORDS = ""
 
 
 def welcome():
@@ -19,6 +19,11 @@ def welcome():
     print(" \___ \| '_ \ / _` |/ _` |/ _ \ \ /\ / / |   | '__/ _` |/ __| |/ /")
     print("  ___) | | | | (_| | (_| | (_) \ V  V /| |___| | | (_| | (__|   < ")
     print(" |____/|_| |_|\__,_|\__,_|\___/ \_/\_/  \____|_|  \__,_|\___|_|\_\ ")
+    print("\n")
+    print("                                                   Mori Asano 2016")
+    for _ in range(2):
+        print "\n"
+    print "Current using the %s dictionary." % PASSWORDS
 
 
 def get_sc_params():
@@ -37,3 +42,4 @@ def get_sc_params():
 
     user_name = input("Who's password are we cracking? Enter the username:")
     return file_path, user_name
+

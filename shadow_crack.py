@@ -46,7 +46,7 @@ def shadow_crack(shadow_file, username):
             if hashed_pwd == compare:
                 end = timer()
                 pwd_dict.close()
-                print "Password cracked!    %s      in     %d" % \
+                print "Password cracked!\n    %s      in     %d" % \
                       (compare, datetime.timedelta(seconds=(end - start)))
                 return
 
@@ -56,4 +56,8 @@ def shadow_crack(shadow_file, username):
 
 if __name__ == '__main__':
     utils.welcome()
-    shadow_crack(utils.get_sc_params())
+    while True:
+        shadow_crack(utils.get_sc_params())
+        loop = input("Again? (y/n)")
+        if loop.lower() not in ['y', 'yes']:
+            break

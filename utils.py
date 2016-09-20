@@ -8,7 +8,8 @@ HASH_ALGS = {
     # "Shadow file code": ("Mechanism_name", hash_function)
     "0": ("DES", None),
     "1": ("MD5", md5),
-    "2a": ("Blowfish", None),
+    "2": ("Blowfish", None),
+    "2a": ("eksBlowfish", None),
     "5": ("SHA256", sha256),
     "6": ("SHA512", sha512)
 }

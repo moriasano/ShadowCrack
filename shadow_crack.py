@@ -28,7 +28,7 @@ def shadow_crack(shadow_file, username):
     print("Hashed PWD:  %s" % hashed_pwd)
 
     # Check for unsupported hash algorithms
-    if hash_alg == "0" or hash_alg == "2a":
+    if utils.HASH_ALGS[hash_alg][1] is None:
         print "Sorry. At this time %s is not supported by ShadowCrack" % utils.HASH_ALGS[hash_alg][0]
         return
 
@@ -36,7 +36,7 @@ def shadow_crack(shadow_file, username):
     pwd_dict = open(utils.PASSWORDS, mode='r')
     for pwd in pwd_dict:
         salted_pwd = salt + pwd
-        hash_mech = utils.HASH_ALGS[hash_alg][0]
+        hash_mech = utils.HASH_ALGS[hash_alg][1]
 
         with hash_mech(salted_pwd) as compare:
             if hashed_pwd == compare:

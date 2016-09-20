@@ -1,5 +1,7 @@
 """ This code cracks the password for a given user from the shadow file """
 import utils
+import datetime
+from timeit import default_timer as timer
 
 
 def shadow_crack(shadow_file, username):
@@ -33,6 +35,8 @@ def shadow_crack(shadow_file, username):
         return
 
     # Check for the hash against hashes of each dictionary entry
+    print "Starting crack..."
+    start = timer()
     pwd_dict = open(utils.PASSWORDS, mode='r')
     for pwd in pwd_dict:
         salted_pwd = salt + pwd
@@ -40,8 +44,10 @@ def shadow_crack(shadow_file, username):
 
         with hash_mech(salted_pwd) as compare:
             if hashed_pwd == compare:
-                print "Password cracked!    %s" % compare
+                end = timer()
                 pwd_dict.close()
+                print "Password cracked!    %s      in     %d" % \
+                      (compare, datetime.timedelta(seconds=(end - start)))
                 return
 
     # Tear down

@@ -4,6 +4,8 @@ from hashlib import (md5, sha256, sha512)
 
 PASSWORDS = "phpbb.txt"
 HASH_ALGS = {
+    # Entries are in the form:
+    # "Shadow file code": ("Mechanism_name", hash_function)
     "0": ("DES", None),
     "1": ("MD5", md5),
     "2a": ("Blowfish", None),

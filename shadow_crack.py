@@ -1,63 +1,44 @@
-""" This code cracks the password for a given user from the shadow file """
+""" Shadow Crack! A tool to crack/recovery passwords on linux systems """
 import utils
 import datetime
 from timeit import default_timer as timer
 
 
-def shadow_crack(shadow_file, username):
+def shadow_crack(hashed_pwd, salt, hash_mech):
     """
     Main logic flow for the shadow file crack
-    :param shadow_file: the shadow file
+    :param hashed_pwd: hash we are
     :param username: the username of the password to crack
-    :return: the cracked password
+    :param hash_mech: the hash function to use
     """
-    # Scan file for the relevant line
-    user_line = None
-    for line in open(shadow_file, 'r').readlines():
-        if username in line:
-            user_line = line
-            break
-
-    # Break if user is not found
-    if user_line is None:
-        print("User '%s' was not found" % username)
-        return
-
-    # Extract the needed data from the line
-    hash_alg, salt, hashed_pwd = user_line.split(":")[1].split("$")[1:]
-    print("Hash Alg.:   %s" % utils.HASH_ALGS[hash_alg][0])
-    print("Salt:        %s" % salt)
-    print("Hashed PWD:  %s" % hashed_pwd)
-
-    # Check for unsupported hash algorithms
-    if utils.HASH_ALGS[hash_alg][1] is None:
-        print "Sorry. At this time %s is not supported by ShadowCrack" % utils.HASH_ALGS[hash_alg][0]
-        return
+    print "\nStarting crack..."
 
     # Check for the hash against hashes of each dictionary entry
-    print "Starting crack..."
+    pwd_dict = open(utils.PASSWORD_LIST, mode='r')
     start = timer()
-    pwd_dict = open(utils.PASSWORDS, mode='r')
     for pwd in pwd_dict:
-        salted_pwd = salt + pwd
-        hash_mech = utils.HASH_ALGS[hash_alg][1]
+        compare = hash_mech(pwd, salt)
 
-        with hash_mech(salted_pwd) as compare:
-            if hashed_pwd == compare:
-                end = timer()
-                pwd_dict.close()
-                print "Password cracked!\n    %s      in     %d" % \
-                      (compare, datetime.timedelta(seconds=(end - start)))
-                return
+        if compare == hashed_pwd:
+            end = timer()
+            pwd_dict.close()
+            print "Password cracked!\n    %s      in     %d" % \
+                  (compare, datetime.timedelta(seconds=(end - start)))
+            return
 
     # Tear down
     print "Password has not been found against the dictionary."
     pwd_dict.close()
+    return
 
 if __name__ == '__main__':
     utils.welcome()
     while True:
-        shadow_crack(utils.get_sc_params())
-        loop = input("Again? (y/n)")
+        file_path, user_name = utils.get_sc_params()
+        hashed_pwd, salt, hash_mech = utils.get_user_data_from_shadow(file_path, user_name)
+        if hash_mech is not None:
+            shadow_crack(hashed_pwd, salt, hash_mech)
+
+        loop = raw_input("Again? (y/n)")
         if loop.lower() not in ['y', 'yes']:
             break

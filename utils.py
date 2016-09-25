@@ -47,10 +47,11 @@ def get_user_line(shadow_file):
     :param shadow_file: file object
     :return: valid username
     """
-    print "Who's password are we cracking?"
+    print "\nWho's password are we cracking?"
     while True:
         username = raw_input("Enter the username:")
-
+        
+        shadow_file.seek(0)
         for line in shadow_file.readlines():
             if username in line:
                 return line

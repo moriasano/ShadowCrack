@@ -24,5 +24,6 @@ The code is to be interpreted with Python 2.7 (currently not tested against 3.x)
                 * This tool only works with linux systems *
 
 From the terminal, navigate to the assignment2 directory.
-Type: 'python shadow_crack.py'
+Type: 'sudo python shadow_crack.py'
+The system may ask for root credentials.
 Continue to follow the tool prompts.

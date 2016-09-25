@@ -15,7 +15,7 @@ The dictionary is specified in utils.py as a constant.
 To use a different dictionary, add the dictionary to the directory
 and specify the filename in utils.py @ PASSWORDS = 'filename.txt'
 
-Currently ShadowCrack only supports passwords hashed with MD5, SHA256, and SHA512
+Currently ShadowCrack only supports passwords hashed with SHA512
 
 
 
@@ -24,5 +24,7 @@ The code is to be interpreted with Python 2.7 (currently not tested against 3.x)
                 * This tool only works with linux systems *
 
 From the terminal, navigate to the assignment2 directory.
-Type: 'python shadow_crack.py'
+Type: 'sudo python assignment2.py'
+System may prompt for root credentials.
+
 Continue to follow the tool prompts.

@@ -35,11 +35,12 @@ def shadow_crack(user_line):
             pwd_dict.close()
             print "Password cracked!\n    %s      in     %d" % \
                   (compare, datetime.timedelta(seconds=(end - start)))
+            return
 
-        # Tear down
-        print "Password has not been found against the dictionary."
-        pwd_dict.close()
-        return
+    # Tear down
+    print "Password has not been found against the dictionary."
+    pwd_dict.close()
+    return
 
 
 if __name__ == '__main__':

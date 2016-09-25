@@ -2,8 +2,7 @@
 import os
 import crypt
 
-SHADOW_FILE_PATH = '/etc/shadow'
-PASSWORD_LIST = "phpbb.txt"
+PASSWORD_LIST = 'phpbb.txt'
 HASH_ALGS = {
     # Entries are in the form:
     # "Shadow file code": ("Mechanism_name", hash_function)
@@ -17,7 +16,7 @@ HASH_ALGS = {
 
 
 def welcome():
-    """ Prints the welcome screen """
+    """ Print the welcome screen """
     print("  ____  _               _                ____                _    ")
     print(" / ___|| |__   __ _  __| | _____      __/ ___|_ __ __ _  ___| | __")
     print(" \___ \| '_ \ / _` |/ _` |/ _ \ \ /\ / / |   | '__/ _` |/ __| |/ /")
@@ -27,52 +26,33 @@ def welcome():
     print "\n\nCurrent using the %s dictionary.\n" % PASSWORD_LIST
 
 
-def get_sc_params():
+def get_shadow_path():
     """
-    Prompt the user for the 'Shadow Crack' params
-    :return: shadow file path, username
+    Get the shadow file path w/ input validation
+    :return: shadow file path
     """
     while True:
-        file_path = raw_input("Enter the file path for the shadow file (Typically /etc/shadow):")
+        file_path = raw_input("Enter the file path for the shadow file (Typically /etc/shadow):\n")
         if os.access(file_path, os.F_OK):
             if os.access(file_path, os.R_OK):
-                break
+                return file_path
             print("That file path cannot be read. Check the file privileges.")
         else:
             print("That file path does not exist. Try again.")
 
-    user_name = raw_input("Who's password are we cracking? Enter the username:")
-    return file_path, user_name
 
-
-def get_user_data_from_shadow(file_path, user_name):
+def get_user_line(shadow_file):
     """
-    :param file_path: shadow file path
-    :param user_name: username to search for
-    :return: hashed_pwd, salt, hash_mech:
-            the hashed password, salt, and hash mech for the specified user
+    Get the line from the shadow file relevant to a specified user
+    :param shadow_file: file object
+    :return: valid username
     """
-    # Scan file for the relevant line
-    user_line = None
-    for line in open(file_path, 'r').readlines():
-        if user_name in line:
-            user_line = line
-            break
+    print "Who's password are we cracking?"
+    while True:
+        username = raw_input("Enter the username:")
 
-    # Break if user is not found
-    if user_line is None:
-        print("User '%s' was not found" % user_name)
-        return
+        for line in shadow_file.readlines():
+            if username in line:
+                return line
 
-    # Extract the needed data from the line
-    hash_alg, salt, hashed_pwd = user_line.split(":")[1].split("$")[1:]
-    print("\nHash Alg.:   %s" % HASH_ALGS[hash_alg][0])
-    print("Salt:        %s" % salt)
-    print("Hashed PWD:  %s" % hashed_pwd)
-
-    # Check for unsupported hash algorithms
-    if HASH_ALGS[hash_alg][1] is None:
-        print "Sorry. At this time %s is not supported by ShadowCrack" % HASH_ALGS[hash_alg][0]
-        return
-
-    return hashed_pwd, salt, HASH_ALGS[hash_alg][1]
+        print "'%s' was not found in the shadow file. Try another username" % username

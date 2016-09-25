@@ -4,41 +4,52 @@ import datetime
 from timeit import default_timer as timer
 
 
-def shadow_crack(hashed_pwd, salt, hash_mech):
+def shadow_crack(user_line):
     """
-    Main logic flow for the shadow file crack
-    :param hashed_pwd: hash we are
-    :param username: the username of the password to crack
-    :param hash_mech: the hash function to use
+    Main logic flow for 'Shadow Crack'
+    :param user_line: the line from the shadow file
     """
+    # Extract the needed data from the line
+    hash_alg, salt, hashed_pwd = user_line.split(":")[1].split("$")[1:]
+    hash_name, hash_mech = utils.HASH_ALGS[hash_alg]
+    print("\nHash Alg.:   %s" % hash_name)
+    print("Salt:        %s" % salt)
+    print("Hashed PWD:  %s" % hashed_pwd)
+
+    # Check for unsupported hash algorithms
+    if hash_mech is None:
+        print "Sorry, At this time %s is not supported by ShadowCrack" % hash_name
+        return
+
     print "\nStarting crack..."
 
     # Check for the hash against hashes of each dictionary entry
     pwd_dict = open(utils.PASSWORD_LIST, mode='r')
     start = timer()
     for pwd in pwd_dict:
-        compare = hash_mech(pwd, salt)
+        formated_salt = "$%s$%s$" % (hash_alg, salt)
+        compare = hash_mech(pwd.strip(), formated_salt)
 
-        if compare == hashed_pwd:
-            end = timer()
+        if hashed_pwd == compare:
+            end = timer.close()
             pwd_dict.close()
             print "Password cracked!\n    %s      in     %d" % \
                   (compare, datetime.timedelta(seconds=(end - start)))
-            return
 
-    # Tear down
-    print "Password has not been found against the dictionary."
-    pwd_dict.close()
-    return
+        # Tear down
+        print "Password has not been found against the dictionary."
+        pwd_dict.close()
+        return
+
 
 if __name__ == '__main__':
     utils.welcome()
     while True:
-        file_path, user_name = utils.get_sc_params()
-        hashed_pwd, salt, hash_mech = utils.get_user_data_from_shadow(file_path, user_name)
-        if hash_mech is not None:
-            shadow_crack(hashed_pwd, salt, hash_mech)
+        shadow_file_path = utils.get_shadow_path()
+        shadow_file = open(shadow_file_path, mode='r')
 
-        loop = raw_input("Again? (y/n)")
-        if loop.lower() not in ['y', 'yes']:
+        user_line = utils.get_user_line(shadow_file)
+        shadow_crack(user_line)
+
+        if raw_input("Again? (y/n)").lower() not in ['y', 'yes']:
             break

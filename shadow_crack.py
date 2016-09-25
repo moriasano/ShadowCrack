@@ -33,8 +33,8 @@ def shadow_crack(user_line):
         if formatted_salt + hashed_pwd == compare:
             end = timer()
             pwd_dict.close()
-            print "Password cracked!\n    %s      in     %d" % \
-                  (compare, datetime.timedelta(seconds=(end - start)))
+            print "Password cracked!    %s      in     %s" % \
+                  (pwd, str(datetime.timedelta(seconds=(end - start))))
             return
 
     # Tear down

@@ -27,11 +27,11 @@ def shadow_crack(user_line):
     pwd_dict = open(utils.PASSWORD_LIST, mode='r')
     start = timer()
     for pwd in pwd_dict:
-        formated_salt = "$%s$%s$" % (hash_alg, salt)
-        compare = hash_mech(pwd.strip(), formated_salt)
+        formatted_salt = "$%s$%s$" % (hash_alg, salt)
+        compare = hash_mech(pwd.strip(), formatted_salt)
 
-        if formated_salt + hashed_pwd == compare:
-            end = timer.close()
+        if formatted_salt + hashed_pwd == compare:
+            end = timer()
             pwd_dict.close()
             print "Password cracked!\n    %s      in     %d" % \
                   (compare, datetime.timedelta(seconds=(end - start)))

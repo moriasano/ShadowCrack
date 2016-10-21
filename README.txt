@@ -24,7 +24,6 @@ The code is to be interpreted with Python 2.7 (currently not tested against 3.x)
                 * This tool only works with linux systems *
 
 From the terminal, navigate to the assignment2 directory.
-<<<<<<< HEAD
 Type: 'sudo python assignment2.py'
 System may prompt for root credentials.
 
